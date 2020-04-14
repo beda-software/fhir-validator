@@ -48,7 +48,7 @@ class Bot:
                 "apply_markdown": False,
             }
         )
-        if response["result"] == "success" and len(response["messages"]) > 1:
+        if response["result"] == "success" and len(response["messages"]) >= 1:
             ctx.prev_message = response["messages"][0]["content"]
             return Success()
         else:
@@ -66,16 +66,20 @@ class Bot:
             return Failure()
 
     def validate_fhir_resource(self, ctx):
-        resource_type = ctx.resource["resourceType"]
-        r = requests.post(
-            f"https://validator.aidbox.app/fhir/{resource_type}/$validate",
-            headers={"authorization": self._authorization,},
-            json=ctx.resource,
-        )
-        if r.status_code == 200:
-            ctx.validation_response = r.json()
-            return Success()
-        else:
+        try:
+            resource_type = ctx.resource["resourceType"]
+            r = requests.post(
+                f"https://validator.aidbox.app/fhir/{resource_type}/$validate",
+                headers={"authorization": self._authorization,},
+                json=ctx.resource,
+            )
+            if r.status_code == 200:
+                ctx.validation_response = r.json()
+                return Success()
+            else:
+                return Failure()
+        except Exception as err:
+            ctx.err = err
             return Failure()
 
     def send_validation_response(self, ctx):

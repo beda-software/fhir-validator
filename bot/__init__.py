@@ -2,7 +2,7 @@ import json
 import logging
 import requests
 
-from stories import story, arguments, Success, Result, Failure
+from stories import story, arguments, Success, Result, Failure, Skip
 
 logger = logging.getLogger("bot")
 
@@ -37,7 +37,7 @@ class Bot:
         if ctx.message["content"] == f"@**{self._bot_name}**":
             return Success()
         else:
-            return Result({"validated": False})
+            return Skip()
 
     def load_previous_message(self, ctx):
         response = self._client.get_messages(

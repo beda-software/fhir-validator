@@ -6,13 +6,15 @@ import requests
 import os
 import zulip
 
-AUTHORIZATION = os.environ.get("AUTHORIZATION", None)
+from bot.settings import Settings
 
-client = zulip.Client(config_file="~/.zuliprc")
+settings = Settings()
+
+client = zulip.Client(email=settings.EMAIL, api_key=settings.API_KEY, site=settings.SITE)
 
 
 def handle(message):
-    if message["content"] == "@**ir4y**":
+    if message["content"] == f"@**{settings.BOT_NAME}**":
         response = client.get_messages(
             {
                 "anchor": message["id"],
@@ -29,7 +31,7 @@ def handle(message):
             resource = data["resourceType"]
             r = requests.post(
                 f"https://validator.aidbox.app/fhir/{resource}/$validate",
-                headers={"authorization": AUTHORIZATION,},
+                headers={"authorization": settings.AUTHORIZATION,},
                 json=data,
             )
             if r.status_code == 200:
@@ -42,8 +44,4 @@ def handle(message):
                 }
                 client.send_message(message_data)
 
-
-if AUTHORIZATION:
-    client.call_on_each_message(handle)
-else:
-    print("Please provide AUTHORIZATION env var")
+client.call_on_each_message(handle)

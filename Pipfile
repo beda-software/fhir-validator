@@ -6,10 +6,12 @@ verify_ssl = true
 [dev-packages]
 black = "*"
 pytest = "*"
+pre-commit = "*"
 
 [packages]
 zulip = "*"
 requests = "*"
+stories = "*"
 
 [requires]
 python_version = "3.8"

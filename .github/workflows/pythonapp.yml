@@ -23,4 +23,5 @@ jobs:
     - uses: dschep/install-pipenv-action@v1
     - name: Test with pytest
       run: |
+        pipenv install -d
         PYTHONPATH=. pipenv run pytest

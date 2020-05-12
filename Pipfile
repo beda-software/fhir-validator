@@ -7,6 +7,10 @@ verify_ssl = true
 black = "*"
 pytest = "*"
 pre-commit = "*"
+anaconda = "*"
+jedi = ">=0.13.0"
+json-rpc = ">=1.8.1"
+service-factory = ">=0.1.5"
 
 [packages]
 zulip = "*"
